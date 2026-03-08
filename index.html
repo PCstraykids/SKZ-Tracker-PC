@@ -224,7 +224,8 @@ document.querySelectorAll(".member-btn").forEach(btn=>{
         });
     });
 });
-
+// Popola subito il menù album all'avvio
+    populateAlbumMenu (document.getElementById("category").value);
 // Ricerca
 document.getElementById("search").addEventListener("input", function(){
     const q = this.value.toLowerCase();
