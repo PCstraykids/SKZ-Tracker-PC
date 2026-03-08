@@ -5,7 +5,7 @@
 <title>SKZ Photocard Tracker</title>
 <style>
 body {
-    background: #2b2f3a; 
+    background: #2b2f3a;
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -64,12 +64,12 @@ input[type="text"]::placeholder {
 }
 
 .member-btn:hover {
-    background: #ff4d4d; /* rosso al passaggio del mouse */
+    background: #ff4d4d;
     color: #fff;
 }
 
 .member-btn.active {
-    background: #ff4d4d; /* rosso quando selezionato */
+    background: #ff4d4d;
     color: #fff;
 }
 
@@ -96,7 +96,6 @@ input[type="text"]::placeholder {
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -112,28 +111,29 @@ input[type="text"]::placeholder {
     </div>
 </header>
 
+<!-- Barra dei membri -->
 <div class="members" id="membersContainer"></div>
 
+<!-- Container per le card -->
 <div class="cards" id="cardsContainer"></div>
 
 <script>
-// Lista dei membri
+// Lista membri
 const members = ["Bang Chan","Lee Know","Changbin","Hyunjin","HAN","Felix","Seungmin","I.N.","OT8"];
 const membersContainer = document.getElementById("membersContainer");
 
-// Crea i bottoni dei membri
+// Crea bottoni membri
 members.forEach(member => {
     const btn = document.createElement("button");
     btn.className = "member-btn";
     btn.innerText = member;
-    btn.setAttribute("data-member", member);
+    btn.dataset.member = member;
     membersContainer.appendChild(btn);
 });
 
-// Array con tutte le photocard
+// Photocard (almeno 1 per ogni membro)
 const allCards = [
     {member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/120"},
-    {member: "Bang Chan", name: "Bang Chan PC 2", img: "https://via.placeholder.com/120"},
     {member: "Lee Know", name: "Lee Know PC 1", img: "https://via.placeholder.com/120"},
     {member: "Changbin", name: "Changbin PC 1", img: "https://via.placeholder.com/120"},
     {member: "Hyunjin", name: "Hyunjin PC 1", img: "https://via.placeholder.com/120"},
@@ -148,7 +148,7 @@ const cardsContainer = document.getElementById("cardsContainer");
 allCards.forEach(card => {
     const div = document.createElement("div");
     div.className = "card";
-    div.setAttribute("data-member", card.member);
+    div.dataset.member = card.member;
     div.innerHTML = `<img src="${card.img}"><p>${card.name}</p>`;
     cardsContainer.appendChild(div);
 });
@@ -157,19 +157,19 @@ allCards.forEach(card => {
 const memberButtons = document.querySelectorAll(".member-btn");
 const cards = document.querySelectorAll(".card");
 
-memberButtons.forEach(button => {
-    button.addEventListener("click", () => {
-        // Rimuove classe active da tutti i bottoni
-        memberButtons.forEach(btn => btn.classList.remove("active"));
-        // Aggiunge active al bottone cliccato
-        button.classList.add("active");
+memberButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        // Rimuove active da tutti i bottoni
+        memberButtons.forEach(b => b.classList.remove("active"));
+        // Aggiunge active al cliccato
+        btn.classList.add("active");
 
-        const member = button.getAttribute("data-member");
+        const member = btn.dataset.member;
         cards.forEach(card => {
             if(member === "OT8") {
                 card.style.display = "block";
             } else {
-                card.style.display = card.getAttribute("data-member") === member ? "block" : "none";
+                card.style.display = card.dataset.member === member ? "block" : "none";
             }
         });
     });
