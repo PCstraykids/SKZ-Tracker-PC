@@ -135,7 +135,7 @@ const photocardData = [
     {category: "pobCoreano",album: "Mixtape", type: "Postcard POB", member: "Hyunjin", img: "https://i.postimg.cc/qRPffRyF/eb979ef2f6f09818df33af1495cd842b.jpg"},
     {category: "pobCoreano",album: "Mixtape", type: "Postcard POB", member: "HAN", img: "https://i.postimg.cc/pXtNqm2Z/a231be545e63c874ff413fdc6a75b72f.jpg"},
     {category: "pobCoreano",album: "Mixtape", type: "Postcard POB", member: "Felix", img: "https://i.postimg.cc/zGJsY4Hj/dc8b8da56cf3e96235139d7b187676de.jpg"},
-    {category: "pobCoreanoi",album: "Mixtape", type: "Postcard POB", member: "Seungmin", img: "https://i.postimg.cc/3wqVpRSX/c8aa915360dc514f2af601b8c79667ec.jpg"},
+    {category: "pobCoreano",album: "Mixtape", type: "Postcard POB", member: "Seungmin", img: "https://i.postimg.cc/3wqVpRSX/c8aa915360dc514f2af601b8c79667ec.jpg"},
     {category: "pobCoreano",album: "Mixtape", type: "Postcard POB", member: "I.N.", img: "https://i.postimg.cc/prbSGStK/79f73ee7533679c6287529c25b2bd031.jpg"},
 
 ];
@@ -149,12 +149,7 @@ const progressEl = document.getElementById("progress");
 // Popola menu album dinamico in base alla categoria selezionata
 function populateAlbumMenu(category) {
     albumSelect.innerHTML = '<option value="">Select album</option>';
-    let filtered = photocardData.filter(c =>  c.category === category);{
-        if(category === "albumCoreani") return true; // mostra tutto per ora
-        if(category === "albumGiapponesi") return false;
-        if(category === "pobCoreano") return false;
-        if(category === "pobGiapponese") return false;
-        return false;
+    let filtered = photocardData.filter(c =>  c.category === category);
     });
     const albums = [...new Set(filtered.map(c => c.album))];
     albums.forEach(album => {
@@ -180,7 +175,7 @@ albumSelect.addEventListener("change", () => {
     const album = albumSelect.value;
     tbody.innerHTML = "";
     if (!album) { photocardTable.style.display="none"; progressEl.innerText="Completion: 0%"; return; }
-    const filtered = photocardData.filter(c=>c.album===album);
+    const filtered = photocardData.filter(c=>c.album===album && c.category===category);
     filtered.forEach(c=>{
         const tr = document.createElement("tr");
         tr.innerHTML = `<td><input type="checkbox"></td><td>${c.type}</td><td>${c.member}</td><td><img src="${c.img}" alt="Photocard"></td>`;
