@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>SKZ Photocard Tracker</title>
+<title>SKZ Photocard Tracker - Tabella</title>
 <style>
 body {
     background: #2b2f3a;
@@ -73,28 +73,6 @@ input[type="text"]::placeholder {
     color: #fff;
 }
 
-/* Container delle card */
-.cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-    gap: 20px;
-}
-
-.card {
-    background: #1e1e1e;
-    border-radius: 10px;
-    padding: 10px;
-    width: 150px;
-    text-align: center;
-}
-
-.card img {
-    width: 120px;
-    border-radius: 8px;
-}
-
 /* Tabella photocard */
 #progress {
     width: 90%;
@@ -140,21 +118,12 @@ input[type="checkbox"] {
 <header>
     <h1>SKZ Photocard Tracker</h1>
     <div class="select-search">
-        <select id="category">
-            <option>Album Coreani</option>
-            <option>Album Giapponesi</option>
-            <option>POB Coreano</option>
-            <option>POB Giapponese</option>
-        </select>
         <input type="text" id="search" placeholder="Cerca photocard...">
     </div>
 </header>
 
 <!-- Barra dei membri -->
 <div class="members" id="membersContainer"></div>
-
-<!-- Container per le card -->
-<div class="cards" id="cardsContainer"></div>
 
 <!-- Barra progresso -->
 <p id="progress">Completion: 0%</p>
@@ -179,7 +148,19 @@ input[type="checkbox"] {
 const members = ["Bang Chan","Lee Know","Changbin","Hyunjin","HAN","Felix","Seungmin","I.N.","OT8"];
 const membersContainer = document.getElementById("membersContainer");
 
-// Crea bottoni membri
+// Photocard array
+const photocardData = [
+    {type: "Album Coreano", member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/80"},
+    {type: "Album Coreano", member: "Lee Know", name: "Lee Know PC 1", img: "https://via.placeholder.com/80"},
+    {type: "Album Coreano", member: "Changbin", name: "Changbin PC 1", img: "https://via.placeholder.com/80"},
+    {type: "Album Coreano", member: "Hyunjin", name: "Hyunjin PC 1", img: "https://via.placeholder.com/80"},
+    {type: "Album Coreano", member: "HAN", name: "HAN PC 1", img: "https://via.placeholder.com/80"},
+    {type: "Album Coreano", member: "Felix", name: "Felix PC 1", img: "https://via.placeholder.com/80"},
+    {type: "Album Coreano", member: "Seungmin", name: "Seungmin PC 1", img: "https://via.placeholder.com/80"},
+    {type: "Album Coreano", member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/80"},
+];
+
+// Genera bottoni membri
 members.forEach(member => {
     const btn = document.createElement("button");
     btn.className = "member-btn";
@@ -188,64 +169,11 @@ members.forEach(member => {
     membersContainer.appendChild(btn);
 });
 
-// Photocard per le card view
-const allCards = [
-    {type: "Album Coreano", member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/120"},
-    {type: "Album Coreano", member: "Lee Know", name: "Lee Know PC 1", img: "https://via.placeholder.com/120"},
-    {type: "Album Coreano", member: "Changbin", name: "Changbin PC 1", img: "https://via.placeholder.com/120"},
-    {type: "Album Coreano", member: "Hyunjin", name: "Hyunjin PC 1", img: "https://via.placeholder.com/120"},
-    {type: "Album Coreano", member: "HAN", name: "HAN PC 1", img: "https://via.placeholder.com/120"},
-    {type: "Album Coreano", member: "Felix", name: "Felix PC 1", img: "https://via.placeholder.com/120"},
-    {type: "Album Coreano", member: "Seungmin", name: "Seungmin PC 1", img: "https://via.placeholder.com/120"},
-    {type: "Album Coreano", member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/120"},
-];
-
-// Genera le card
-const cardsContainer = document.getElementById("cardsContainer");
-allCards.forEach(card => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.dataset.member = card.member;
-    div.innerHTML = `<img src="${card.img}"><p>${card.name}</p>`;
-    cardsContainer.appendChild(div);
-});
-
-// Filtri card view
-const memberButtons = document.querySelectorAll(".member-btn");
-const cards = document.querySelectorAll(".card");
-
-memberButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        memberButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        const member = btn.dataset.member;
-        cards.forEach(card => {
-            if(member === "OT8") {
-                card.style.display = "block";
-            } else {
-                card.style.display = card.dataset.member === member ? "block" : "none";
-            }
-        });
-    });
-});
-
-// Ricerca card view
-document.getElementById("search").addEventListener("input", function() {
-    const query = this.value.toLowerCase();
-    cards.forEach(card => {
-        const name = card.querySelector("p").innerText.toLowerCase();
-        card.style.display = name.includes(query) ? "block" : "none";
-    });
-});
-
-// ===================== TABELLA =====================
-
-// Seleziona tbody e progress
+// Genera righe tabella
 const tbody = document.querySelector("#photocardTable tbody");
 const progressEl = document.getElementById("progress");
 
-// Genera righe tabella
-allCards.forEach((card,index) => {
+photocardData.forEach((card, index) => {
     const tr = document.createElement("tr");
 
     const tdCheck = document.createElement("td");
@@ -274,7 +202,7 @@ allCards.forEach((card,index) => {
     tbody.appendChild(tr);
 });
 
-// Salva stato checkbox
+// Funzioni checkbox e progresso
 function saveState() {
     const states = {};
     document.querySelectorAll("#photocardTable tbody tr").forEach((tr,index) => {
@@ -285,7 +213,6 @@ function saveState() {
     updateProgress();
 }
 
-// Carica stato checkbox
 function loadState() {
     const states = JSON.parse(localStorage.getItem("photocardState")) || {};
     document.querySelectorAll("#photocardTable tbody tr").forEach((tr,index) => {
@@ -295,7 +222,6 @@ function loadState() {
     updateProgress();
 }
 
-// Aggiorna barra progresso
 function updateProgress() {
     const checkboxes = document.querySelectorAll("#photocardTable tbody input[type=checkbox]");
     const checked = document.querySelectorAll("#photocardTable tbody input[type=checkbox]:checked");
@@ -305,6 +231,35 @@ function updateProgress() {
 
 loadState();
 
+// Filtro membri sulla tabella
+const memberButtons = document.querySelectorAll(".member-btn");
+const rows = document.querySelectorAll("#photocardTable tbody tr");
+
+memberButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        memberButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const member = btn.dataset.member;
+
+        rows.forEach((tr, i) => {
+            const rowMember = photocardData[i].member;
+            if(member === "OT8") {
+                tr.style.display = "table-row";
+            } else {
+                tr.style.display = rowMember === member ? "table-row" : "none";
+            }
+        });
+    });
+});
+
+// Ricerca tabella
+document.getElementById("search").addEventListener("input", function() {
+    const query = this.value.toLowerCase();
+    rows.forEach((tr, i) => {
+        const name = photocardData[i].name.toLowerCase();
+        tr.style.display = name.includes(query) ? "table-row" : "none";
+    });
+});
 </script>
 
 </body>
