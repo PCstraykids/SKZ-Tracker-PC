@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>SKZ Photocard Tracker</title>
 <style>
+/* Corpo della pagina */
 body {
     background: #2b2f3a; /* grigio scuro-azzurro */
     color: white;
@@ -12,12 +13,13 @@ body {
     padding: 0;
 }
 
+/* Header con titolo e selezioni */
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 20px 50px;
-    background: #3a3f51; /* leggermente più chiaro */
+    background: #3a3f51;
 }
 
 h1 {
@@ -31,19 +33,7 @@ h1 {
     gap: 15px;
 }
 
-/* Menu a tendina */
-select {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1em;
-    background: #2b3348;
-    color: white;
-    cursor: pointer;
-}
-
-/* Campo di ricerca */
-input[type="text"] {
+select, input[type="text"] {
     padding: 8px 12px;
     border-radius: 8px;
     border: none;
@@ -56,11 +46,36 @@ input[type="text"]::placeholder {
     color: #aaa;
 }
 
+/* Barra dei membri */
+.members {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.member-btn {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    background: #3a3f51;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.member-btn:hover {
+    background: #f39c12;
+    color: #111;
+}
+
+/* Container delle card */
 .cards {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 30px;
+    padding: 20px;
     gap: 20px;
 }
 
@@ -81,6 +96,7 @@ input[type="text"]::placeholder {
 
 <body>
 
+<!-- Header con menu a tendina e ricerca -->
 <header>
     <h1>SKZ Photocard Tracker</h1>
     <div class="select-search">
@@ -94,15 +110,61 @@ input[type="text"]::placeholder {
     </div>
 </header>
 
+<!-- Barra dei membri -->
+<div class="members">
+    <button class="member-btn" data-member="Bang Chan">Bang Chan</button>
+    <button class="member-btn" data-member="Lee Know">Lee Know</button>
+    <button class="member-btn" data-member="Changbin">Changbin</button>
+    <button class="member-btn" data-member="Hyunjin">Hyunjin</button>
+    <button class="member-btn" data-member="HAN">HAN</button>
+    <button class="member-btn" data-member="Felix">Felix</button>
+    <button class="member-btn" data-member="Seungmin">Seungmin</button>
+    <button class="member-btn" data-member="I.N.">I.N.</button>
+    <button class="member-btn" data-member="OT8">OT8</button>
+</div>
+
+<!-- Container per le photocard -->
 <div class="cards" id="cardsContainer">
-    <!-- Qui potrai aggiungere le card dinamicamente -->
+    <!-- Esempio di card -->
+    <div class="card" data-member="Bang Chan">
+        <img src="https://via.placeholder.com/120">
+        <p>Bang Chan PC 1</p>
+    </div>
+    <div class="card" data-member="Hyunjin">
+        <img src="https://via.placeholder.com/120">
+        <p>Hyunjin PC 1</p>
+    </div>
+    <div class="card" data-member="Felix">
+        <img src="https://via.placeholder.com/120">
+        <p>Felix PC 1</p>
+    </div>
+    <div class="card" data-member="OT8">
+        <img src="https://via.placeholder.com/120">
+        <p>OT8 PC 1</p>
+    </div>
 </div>
 
 <script>
-// Esempio base di filtro di ricerca
+// Filtro per membro
+const memberButtons = document.querySelectorAll(".member-btn");
+const cards = document.querySelectorAll(".card");
+
+memberButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        const member = button.getAttribute("data-member");
+        cards.forEach(card => {
+            if(member === "OT8") {
+                card.style.display = "block"; // OT8 mostra tutti i membri
+            } else {
+                card.style.display = card.getAttribute("data-member") === member ? "block" : "none";
+            }
+        });
+    });
+});
+
+// Filtro ricerca
 document.getElementById("search").addEventListener("input", function() {
     const query = this.value.toLowerCase();
-    const cards = document.querySelectorAll(".card");
     cards.forEach(card => {
         const name = card.querySelector("p").innerText.toLowerCase();
         card.style.display = name.includes(query) ? "block" : "none";
