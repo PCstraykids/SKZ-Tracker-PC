@@ -3,92 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <title>SKZ Photocard Tracker</title>
-
 <style>
-
-body{
-background:#111;
-color:white;
-font-family:Arial;
-text-align:center;
+/* Corpo della pagina */
+body {
+    background: #2b2f3a; /* grigio scuro-azzurro */
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
-.cards{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
+/* Titolo principale */
+h1 {
+    margin-top: 50px;
+    font-size: 2.5em;
+    letter-spacing: 2px;
 }
 
-.card{
-background:#1e1e1e;
-border-radius:10px;
-padding:10px;
-margin:10px;
-width:150px;
+/* Menu verticale */
+.menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
 }
 
-img{
-width:120px;
-border-radius:8px;
+/* Link menu */
+.menu a {
+    background: #3a3f51; /* leggermente più chiaro per contrasto */
+    color: white;
+    text-decoration: none;
+    padding: 15px 30px;
+    margin: 10px;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    font-size: 1.2em;
+    transition: 0.3s;
 }
 
+/* Hover dei link */
+.menu a:hover {
+    background: #f39c12; /* colore brillante al passaggio del mouse */
+    color: #111;
+}
+
+/* Footer semplice */
+footer {
+    margin-top: 100px;
+    font-size: 0.9em;
+    color: #aaa;
+}
 </style>
-
 </head>
 
 <body>
 
 <h1>SKZ Photocard Tracker</h1>
-<button onclick="showAlbum('mixtape')">Mixtape</button>
-<p id="progress">Completion: 0%</p>
 
-<div class="cards">
-
-<div class="card">
-<input type="checkbox" onclick="updateProgress()">
-<img src="https://via.placeholder.com/120">
-<p>Bang Chan PC</p>
-</div>
-<div id="mixtape" class="album">
-
-<h2>Mixtape</h2>
-
-<div class="card">
-<input type="checkbox" onclick="updateProgress()">
-<img src="https://via.placeholder.com/120">
-<p>Bang Chan Mixtape</p>
+<div class="menu">
+    <a href="#collection">Collezione</a>
+    <a href="#wishlist">Wishlist</a>
+    <a href="#sets">Set Completi</a>
+    <a href="#stats">Statistiche</a>
 </div>
 
-<div class="card">
-<input type="checkbox" onclick="updateProgress()">
-<img src="https://via.placeholder.com/120">
-<p>Lee Know Mixtape</p>
-</div>
-
-</div>
-<div class="card">
-<input type="checkbox" onclick="updateProgress()">
-<img src="https://via.placeholder.com/120">
-<p>Hyunjin PC</p>
-</div>
-
-</div>
-
-<script>
-
-function updateProgress(){
-
-let checkboxes = document.querySelectorAll("input[type=checkbox]");
-let checked = document.querySelectorAll("input[type=checkbox]:checked");
-
-let percent = Math.round((checked.length / checkboxes.length) * 100);
-
-document.getElementById("progress").innerText =
-"Completion: " + checked.length + "/" + checkboxes.length + " (" + percent + "%)";
-
-}
-
-</script>
+<footer>
+    &copy; 2026 SKZ Photocard Tracker
+</footer>
 
 </body>
 </html>
