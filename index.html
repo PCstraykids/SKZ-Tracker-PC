@@ -185,35 +185,26 @@ progressEl.innerText="Completion: 0%";
 
 albumSelect.addEventListener("change",()=>{
 
-const album=albumSelect.value;
-const category=document.getElementById("category").value;
+const album = albumSelect.value;
+const category = document.getElementById("category").value;
 
 tbody.innerHTML="";
 
 if(!album){
-
-photocardTable.style.display="none";
-progressEl.innerText="Completion: 0%";
-return;
+    photocardTable.style.display = "none";
+    progressEl.innerText = "Completion: 0%";
+    return;
 
 }
+const filtered = photocardData.filter(c => c.album === album && c.category === category);
 
-const filtered=photocardData.filter(c=>c.album===album && c.category===category);
-
-filtered.forEach(c=>{
-
-const tr=document.createElement("tr");
-
-tr.innerHTML=`<td><input type="checkbox"></td><td>${c.type}</td><td>${c.member}</td><td><img src="${c.img}" alt="Photocard"></td>`;
-
-tr.querySelector("input").addEventListener("change",saveState);
-
-tbody.appendChild(tr);
-
+filtered.forEach(c => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td><input type="checkbox"></td><td>${c.type}</td><td>${c.member}</td><td><img src="${c.img}" alt="Photocard"></td>`;
+    tr.querySelector("input").addEventListener("change", saveState);
+    tbody.appendChild(tr);
 });
-
-photocardTable.style.display="table";
-
+photocardTable.style.display = "table";
 loadState();
 
 });
