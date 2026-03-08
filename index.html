@@ -202,7 +202,7 @@ const progressEl = document.getElementById("progress");
 
 // Popola il menu album in base alla categoria selezionata
 function populateAlbumMenu(category) {
-    albumSelect.innerHTML = '<option value="">Seleziona un album</option>';
+    albumSelect.innerHTML = '<option value="">Select album</option>';
     let filtered = photocardData.filter(c => {
         if(category === "albumCoreani") return c.type.includes("Album Coreano");
         if(category === "albumGiapponesi") return c.type.includes("Album Giapponese");
