@@ -4,16 +4,14 @@
 <meta charset="UTF-8">
 <title>SKZ Photocard Tracker</title>
 <style>
-/* Corpo della pagina */
 body {
-    background: #2b2f3a; /* grigio scuro-azzurro */
+    background: #2b2f3a; 
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
-/* Header con titolo e selezioni */
 header {
     display: flex;
     align-items: center;
@@ -66,8 +64,14 @@ input[type="text"]::placeholder {
 }
 
 .member-btn:hover {
-    background: #f39c12;
-    color: #111;
+    background: #ff4d4d; /* rosso al passaggio del mouse */
+    color: #fff;
+}
+
+/* Active/selected button */
+.member-btn.active {
+    background: #ff4d4d; /* rosso quando selezionato */
+    color: #fff;
 }
 
 /* Container delle card */
@@ -96,7 +100,6 @@ input[type="text"]::placeholder {
 
 <body>
 
-<!-- Header con menu a tendina e ricerca -->
 <header>
     <h1>SKZ Photocard Tracker</h1>
     <div class="select-search">
@@ -110,7 +113,6 @@ input[type="text"]::placeholder {
     </div>
 </header>
 
-<!-- Barra dei membri -->
 <div class="members">
     <button class="member-btn" data-member="Bang Chan">Bang Chan</button>
     <button class="member-btn" data-member="Lee Know">Lee Know</button>
@@ -123,38 +125,47 @@ input[type="text"]::placeholder {
     <button class="member-btn" data-member="OT8">OT8</button>
 </div>
 
-<!-- Container per le photocard -->
-<div class="cards" id="cardsContainer">
-    <!-- Esempio di card -->
-    <div class="card" data-member="Bang Chan">
-        <img src="https://via.placeholder.com/120">
-        <p>Bang Chan PC 1</p>
-    </div>
-    <div class="card" data-member="Hyunjin">
-        <img src="https://via.placeholder.com/120">
-        <p>Hyunjin PC 1</p>
-    </div>
-    <div class="card" data-member="Felix">
-        <img src="https://via.placeholder.com/120">
-        <p>Felix PC 1</p>
-    </div>
-    <div class="card" data-member="OT8">
-        <img src="https://via.placeholder.com/120">
-        <p>OT8 PC 1</p>
-    </div>
-</div>
+<div class="cards" id="cardsContainer"></div>
 
 <script>
-// Filtro per membro
+// Array con tutte le photocard
+const allCards = [
+    {member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/120"},
+    {member: "Bang Chan", name: "Bang Chan PC 2", img: "https://via.placeholder.com/120"},
+    {member: "Lee Know", name: "Lee Know PC 1", img: "https://via.placeholder.com/120"},
+    {member: "Changbin", name: "Changbin PC 1", img: "https://via.placeholder.com/120"},
+    {member: "Hyunjin", name: "Hyunjin PC 1", img: "https://via.placeholder.com/120"},
+    {member: "HAN", name: "HAN PC 1", img: "https://via.placeholder.com/120"},
+    {member: "Felix", name: "Felix PC 1", img: "https://via.placeholder.com/120"},
+    {member: "Seungmin", name: "Seungmin PC 1", img: "https://via.placeholder.com/120"},
+    {member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/120"},
+];
+
+// Genera le card
+const container = document.getElementById("cardsContainer");
+allCards.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.setAttribute("data-member", card.member);
+    div.innerHTML = `<img src="${card.img}"><p>${card.name}</p>`;
+    container.appendChild(div);
+});
+
+// Filtra per membro
 const memberButtons = document.querySelectorAll(".member-btn");
 const cards = document.querySelectorAll(".card");
 
 memberButtons.forEach(button => {
     button.addEventListener("click", () => {
+        // Rimuove classe active da tutti i bottoni
+        memberButtons.forEach(btn => btn.classList.remove("active"));
+        // Aggiunge active al bottone cliccato
+        button.classList.add("active");
+
         const member = button.getAttribute("data-member");
         cards.forEach(card => {
             if(member === "OT8") {
-                card.style.display = "block"; // OT8 mostra tutti i membri
+                card.style.display = "block";
             } else {
                 card.style.display = card.getAttribute("data-member") === member ? "block" : "none";
             }
