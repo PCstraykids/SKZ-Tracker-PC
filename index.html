@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SKZ Photocard Tracker</title>
+
+<style>
+
+body{
+background:#111;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+.cards{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.card{
+background:#1e1e1e;
+border-radius:10px;
+padding:10px;
+margin:10px;
+width:150px;
+}
+
+img{
+width:120px;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>SKZ Photocard Tracker</h1>
+
+<p id="progress">Completion: 0%</p>
+
+<div class="cards">
+
+<div class="card">
+<input type="checkbox" onclick="updateProgress()">
+<img src="https://via.placeholder.com/120">
+<p>Bang Chan PC</p>
+</div>
+
+<div class="card">
+<input type="checkbox" onclick="updateProgress()">
+<img src="https://via.placeholder.com/120">
+<p>Hyunjin PC</p>
+</div>
+
+</div>
+
+<script>
+
+function updateProgress(){
+
+let checkboxes = document.querySelectorAll("input[type=checkbox]");
+let checked = document.querySelectorAll("input[type=checkbox]:checked");
+
+let percent = Math.round((checked.length / checkboxes.length) * 100);
+
+document.getElementById("progress").innerText =
+"Completion: " + checked.length + "/" + checkboxes.length + " (" + percent + "%)";
+
+}
+
+</script>
+
+</body>
+</html>
