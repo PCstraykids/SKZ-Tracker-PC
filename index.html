@@ -75,6 +75,15 @@ input[type="text"]::placeholder {
 }
 
 /* Tabella photocard */
+#albumDropdown {
+    width: 90%;
+    margin: 20px auto;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ffcc00;
+    text-align: center;
+}
+
 #photocardTable {
     width: 90%;
     margin: 0 auto 40px;
@@ -120,8 +129,12 @@ input[type="checkbox"] {
 <header>
     <h1>SKZ Photocard Tracker</h1>
     <div class="select-search">
-        <select id="albumSelect">
-            <option value="">Seleziona un album</option>
+        <!-- Menu tendina principale -->
+        <select id="category">
+            <option value="albumCoreani">Album Coreani</option>
+            <option value="albumGiapponesi">Album Giapponesi</option>
+            <option value="pobCoreano">POB Coreano</option>
+            <option value="pobGiapponese">POB Giapponese</option>
         </select>
         <input type="text" id="search" placeholder="Cerca photocard...">
     </div>
@@ -130,8 +143,12 @@ input[type="checkbox"] {
 <!-- Barra dei membri -->
 <div class="members" id="membersContainer"></div>
 
-<!-- Barra progresso -->
-<p id="progress">Completion: 0%</p>
+<!-- Menu a tendina album specifico -->
+<div id="albumDropdown">
+    <select id="albumSelect">
+        <option value="">Seleziona un album</option>
+    </select>
+</div>
 
 <!-- Tabella photocard -->
 <table id="photocardTable">
@@ -146,15 +163,14 @@ input[type="checkbox"] {
     <tbody></tbody>
 </table>
 
+<p id="progress">Completion: 0%</p>
+
 <script>
-// Membri
+// Lista membri
 const members = ["Bang Chan","Lee Know","Changbin","Hyunjin","HAN","Felix","Seungmin","I.N.","OT8"];
 const membersContainer = document.getElementById("membersContainer");
-const tbody = document.querySelector("#photocardTable tbody");
-const table = document.getElementById("photocardTable");
-const progressEl = document.getElementById("progress");
 
-// Bottoni membri
+// Crea bottoni membri
 members.forEach(member => {
     const btn = document.createElement("button");
     btn.className = "member-btn";
@@ -163,7 +179,7 @@ members.forEach(member => {
     membersContainer.appendChild(btn);
 });
 
-// Photocard array
+// Photocard array (tabella)
 const photocardData = [
     {album: "Mixtape", type: "Album Coreano", member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/80"},
     {album: "Mixtape", type: "Album Coreano", member: "Lee Know", name: "Lee Know PC 1", img: "https://via.placeholder.com/80"},
@@ -173,37 +189,68 @@ const photocardData = [
     {album: "Mixtape", type: "Album Coreano", member: "Felix", name: "Felix PC 1", img: "https://via.placeholder.com/80"},
     {album: "Mixtape", type: "Album Coreano", member: "Seungmin", name: "Seungmin PC 1", img: "https://via.placeholder.com/80"},
     {album: "Mixtape", type: "Album Coreano", member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/80"},
+    // Aggiungi altri album se vuoi, con altri dati.
 ];
 
 // Popola menu album dinamico
 const albumSelect = document.getElementById("albumSelect");
-const albums = [...new Set(photocardData.map(c => c.album))];
-albums.forEach(album => {
-    const total = photocardData.filter(c => c.album === album).length;
-    const option = document.createElement("option");
-    option.value = album;
-    option.dataset.total = total;
-    option.innerText = `${album} - 0/${total} (0%)`;
-    albumSelect.appendChild(option);
+
+// Funzioni per popolare il menu album, basato su categoria
+function populateAlbumMenu(selectedCategory) {
+    albumSelect.innerHTML = '<option value="">Seleziona un album</option>';
+    const filteredAlbums = photocardData.filter(c => {
+        // Filtra per categoria
+        if (selectedCategory === "albumCoreani" && c.type.includes("Album Coreano")) return true;
+        if (selectedCategory === "albumGiapponesi" && c.type.includes("Album Giapponese")) return true;
+        if (selectedCategory === "pobCoreano" && c.type.includes("POB Coreano")) return true;
+        if (selectedCategory === "pobGiapponese" && c.type.includes("POB Giapponese")) return true;
+        return false;
+    });
+    const albums = [...new Set(filteredAlbums.map(c => c.album))];
+    albums.forEach(album => {
+        const total = filteredAlbums.filter(c => c.album === album).length;
+        const option = document.createElement("option");
+        option.value = album;
+        option.dataset.total = total;
+        option.innerText = `${album} - 0/${total} (0%)`;
+        albumSelect.appendChild(option);
+    });
+}
+
+// Selezione categoria principale
+document.getElementById("category").addEventListener("change", () => {
+    const selectedCategory = document.getElementById("category").value;
+    populateAlbumMenu(selectedCategory);
+    // Resetta tabella e progresso
+    albumSelect.value = "";
+    document.getElementById("photocardTable").style.display = "none";
+    document.getElementById("progress").innerText = "Completion: 0%";
 });
 
 // Funzioni stato checkbox
 function saveState() {
     const rows = tbody.querySelectorAll("tr");
     const selectedAlbum = albumSelect.value;
+    if (!selectedAlbum) return;
+
     const option = Array.from(albumSelect.options).find(o => o.value === selectedAlbum);
     const total = parseInt(option.dataset.total);
     const checked = Array.from(rows).filter(r => r.querySelector("input[type=checkbox]").checked).length;
-    option.innerText = `${selectedAlbum} - ${checked}/${total} (${Math.round(checked/total*100)}%)`;
+    option.innerText = `${selectedAlbum} - ${checked}/${total} (${Math.round((checked / total) * 100)}%)`;
     updateProgress();
+
+    // Salva stato su localStorage
     const states = {};
-    rows.forEach((tr,i)=>states[i]=tr.querySelector("input[type=checkbox]").checked);
-    localStorage.setItem("photocardState", JSON.stringify(states));
+    rows.forEach((tr, i) => states[i] = tr.querySelector("input[type=checkbox]").checked);
+    localStorage.setItem(`photocardState-${selectedAlbum}`, JSON.stringify(states));
 }
 
 function loadState() {
-    const states = JSON.parse(localStorage.getItem("photocardState"))||{};
-    tbody.querySelectorAll("tr").forEach((tr,i)=>{
+    const selectedAlbum = albumSelect.value;
+    if (!selectedAlbum) return;
+    const states = JSON.parse(localStorage.getItem(`photocardState-${selectedAlbum}`)) || {};
+    const rows = tbody.querySelectorAll("tr");
+    rows.forEach((tr, i) => {
         tr.querySelector("input[type=checkbox]").checked = !!states[i];
     });
     saveState();
@@ -211,20 +258,32 @@ function loadState() {
 
 function updateProgress() {
     const rows = tbody.querySelectorAll("tr");
-    const checked = Array.from(rows).filter(r=>r.querySelector("input[type=checkbox]").checked).length;
+    const checked = Array.from(rows).filter(r => r.querySelector("input[type=checkbox]").checked).length;
     const total = rows.length;
-    progressEl.innerText = `Completion: ${checked}/${total} (${total?Math.round(checked/total*100):0}%)`;
+    progressEl.innerText = `Completion: ${checked}/${total} (${total ? Math.round(checked / total * 100) : 0}%)`;
 }
 
-// Selezione album apre tabella
-albumSelect.addEventListener("change",()=>{
+// Selezione album apre tabella e aggiorna menu
+albumSelect.addEventListener("change", () => {
     const selected = albumSelect.value;
-    tbody.innerHTML="";
-    if(!selected){ table.style.display="none"; return; }
-    const filtered = photocardData.filter(c=>c.album===selected);
-    filtered.forEach(card=>{
+    tbody.innerHTML = "";
+    if (!selected) {
+        table.style.display = "none";
+        progressEl.innerText = "Completion: 0%";
+        return;
+    }
+
+    const selectedCategory = document.getElementById("category").value;
+    // Filtra per categoria e album selezionato
+    const filtered = photocardData.filter(c => c.album === selected && (
+        (selectedCategory === "albumCoreani" && c.type.includes("Album Coreano")) ||
+        (selectedCategory === "albumGiapponesi" && c.type.includes("Album Giapponese")) ||
+        (selectedCategory === "pobCoreano" && c.type.includes("POB Coreano")) ||
+        (selectedCategory === "pobGiapponese" && c.type.includes("POB Giapponese"))
+    ));
+    filtered.forEach(card => {
         const tr = document.createElement("tr");
-        tr.innerHTML=`
+        tr.innerHTML = `
             <td><input type="checkbox"></td>
             <td>${card.type}</td>
             <td>${card.member}</td>
@@ -233,30 +292,30 @@ albumSelect.addEventListener("change",()=>{
         tr.querySelector("input[type=checkbox]").addEventListener("change", saveState);
         tbody.appendChild(tr);
     });
-    table.style.display="table";
+    table.style.display = "table";
     loadState();
 });
 
 // Filtri membri
 const memberButtons = document.querySelectorAll(".member-btn");
-memberButtons.forEach(btn=>{
-    btn.addEventListener("click",()=>{
-        memberButtons.forEach(b=>b.classList.remove("active"));
+memberButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        memberButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         const member = btn.dataset.member;
-        tbody.querySelectorAll("tr").forEach(tr=>{
+        tbody.querySelectorAll("tr").forEach(tr => {
             const m = tr.children[2].innerText;
-            tr.style.display = (member==="OT8"||m===member)?"table-row":"none";
+            tr.style.display = (member === "OT8" || m === member) ? "table-row" : "none";
         });
     });
 });
 
 // Ricerca tabella
-document.getElementById("search").addEventListener("input",function(){
+document.getElementById("search").addEventListener("input", function () {
     const query = this.value.toLowerCase();
-    tbody.querySelectorAll("tr").forEach(tr=>{
+    tbody.querySelectorAll("tr").forEach(tr => {
         const name = tr.children[3].innerText.toLowerCase();
-        tr.style.display = name.includes(query)?"table-row":"none";
+        tr.style.display = name.includes(query) ? "table-row" : "none";
     });
 });
 </script>
