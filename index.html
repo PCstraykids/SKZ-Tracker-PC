@@ -4,74 +4,111 @@
 <meta charset="UTF-8">
 <title>SKZ Photocard Tracker</title>
 <style>
-/* Corpo della pagina */
 body {
     background: #2b2f3a; /* grigio scuro-azzurro */
     color: white;
     font-family: Arial, sans-serif;
-    text-align: center;
     margin: 0;
     padding: 0;
 }
 
-/* Titolo principale */
-h1 {
-    margin-top: 50px;
-    font-size: 2.5em;
-    letter-spacing: 2px;
-}
-
-/* Menu verticale */
-.menu {
+header {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin-top: 50px;
+    justify-content: space-between;
+    padding: 20px 50px;
+    background: #3a3f51; /* leggermente più chiaro */
 }
 
-/* Link menu */
-.menu a {
-    background: #3a3f51; /* leggermente più chiaro per contrasto */
+h1 {
+    margin: 0;
+    font-size: 1.8em;
+}
+
+.select-search {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Menu a tendina */
+select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    background: #2b3348;
     color: white;
-    text-decoration: none;
-    padding: 15px 30px;
-    margin: 10px;
-    border-radius: 10px;
-    width: 200px;
-    text-align: center;
-    font-size: 1.2em;
-    transition: 0.3s;
+    cursor: pointer;
 }
 
-/* Hover dei link */
-.menu a:hover {
-    background: #f39c12; /* colore brillante al passaggio del mouse */
-    color: #111;
+/* Campo di ricerca */
+input[type="text"] {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    background: #2b3348;
+    color: white;
 }
 
-/* Footer semplice */
-footer {
-    margin-top: 100px;
-    font-size: 0.9em;
+input[type="text"]::placeholder {
     color: #aaa;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 30px;
+    gap: 20px;
+}
+
+.card {
+    background: #1e1e1e;
+    border-radius: 10px;
+    padding: 10px;
+    width: 150px;
+    text-align: center;
+}
+
+.card img {
+    width: 120px;
+    border-radius: 8px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>SKZ Photocard Tracker</h1>
+<header>
+    <h1>SKZ Photocard Tracker</h1>
+    <div class="select-search">
+        <select id="category">
+            <option>Album Coreani</option>
+            <option>Album Giapponesi</option>
+            <option>POB Coreano</option>
+            <option>POB Giapponese</option>
+        </select>
+        <input type="text" id="search" placeholder="Cerca photocard...">
+    </div>
+</header>
 
-<div class="menu">
-    <a href="#collection">Collezione</a>
-    <a href="#wishlist">Wishlist</a>
-    <a href="#sets">Set Completi</a>
-    <a href="#stats">Statistiche</a>
+<div class="cards" id="cardsContainer">
+    <!-- Qui potrai aggiungere le card dinamicamente -->
 </div>
 
-<footer>
-    &copy; 2026 SKZ Photocard Tracker
-</footer>
+<script>
+// Esempio base di filtro di ricerca
+document.getElementById("search").addEventListener("input", function() {
+    const query = this.value.toLowerCase();
+    const cards = document.querySelectorAll(".card");
+    cards.forEach(card => {
+        const name = card.querySelector("p").innerText.toLowerCase();
+        card.style.display = name.includes(query) ? "block" : "none";
+    });
+});
+</script>
 
 </body>
 </html>
