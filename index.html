@@ -94,6 +94,45 @@ input[type="text"]::placeholder {
     width: 120px;
     border-radius: 8px;
 }
+
+/* Tabella photocard */
+#progress {
+    width: 90%;
+    margin: 20px auto;
+    text-align: right;
+    font-weight: bold;
+    color: #ffcc00;
+}
+
+table {
+    width: 90%;
+    margin: 0 auto 40px;
+    border-collapse: collapse;
+    background: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+}
+
+th {
+    background: #3a3f51;
+}
+
+td img {
+    width: 80px;
+    border-radius: 6px;
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -117,6 +156,24 @@ input[type="text"]::placeholder {
 <!-- Container per le card -->
 <div class="cards" id="cardsContainer"></div>
 
+<!-- Barra progresso -->
+<p id="progress">Completion: 0%</p>
+
+<!-- Tabella photocard -->
+<table id="photocardTable">
+    <thead>
+        <tr>
+            <th>Check</th>
+            <th>Type</th>
+            <th>Member</th>
+            <th>Photocard</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Righe generate da JS -->
+    </tbody>
+</table>
+
 <script>
 // Lista membri
 const members = ["Bang Chan","Lee Know","Changbin","Hyunjin","HAN","Felix","Seungmin","I.N.","OT8"];
@@ -131,19 +188,19 @@ members.forEach(member => {
     membersContainer.appendChild(btn);
 });
 
-// Photocard (almeno 1 per ogni membro)
+// Photocard per le card view
 const allCards = [
-    {member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/120"},
-    {member: "Lee Know", name: "Lee Know PC 1", img: "https://via.placeholder.com/120"},
-    {member: "Changbin", name: "Changbin PC 1", img: "https://via.placeholder.com/120"},
-    {member: "Hyunjin", name: "Hyunjin PC 1", img: "https://via.placeholder.com/120"},
-    {member: "HAN", name: "HAN PC 1", img: "https://via.placeholder.com/120"},
-    {member: "Felix", name: "Felix PC 1", img: "https://via.placeholder.com/120"},
-    {member: "Seungmin", name: "Seungmin PC 1", img: "https://via.placeholder.com/120"},
-    {member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/120"},
+    {type: "Album Coreano", member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/120"},
+    {type: "Album Coreano", member: "Lee Know", name: "Lee Know PC 1", img: "https://via.placeholder.com/120"},
+    {type: "Album Coreano", member: "Changbin", name: "Changbin PC 1", img: "https://via.placeholder.com/120"},
+    {type: "Album Coreano", member: "Hyunjin", name: "Hyunjin PC 1", img: "https://via.placeholder.com/120"},
+    {type: "Album Coreano", member: "HAN", name: "HAN PC 1", img: "https://via.placeholder.com/120"},
+    {type: "Album Coreano", member: "Felix", name: "Felix PC 1", img: "https://via.placeholder.com/120"},
+    {type: "Album Coreano", member: "Seungmin", name: "Seungmin PC 1", img: "https://via.placeholder.com/120"},
+    {type: "Album Coreano", member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/120"},
 ];
 
-// Genera le card nel container
+// Genera le card
 const cardsContainer = document.getElementById("cardsContainer");
 allCards.forEach(card => {
     const div = document.createElement("div");
@@ -153,17 +210,14 @@ allCards.forEach(card => {
     cardsContainer.appendChild(div);
 });
 
-// Selezione bottoni e filtro
+// Filtri card view
 const memberButtons = document.querySelectorAll(".member-btn");
 const cards = document.querySelectorAll(".card");
 
 memberButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-        // Rimuove active da tutti i bottoni
         memberButtons.forEach(b => b.classList.remove("active"));
-        // Aggiunge active al cliccato
         btn.classList.add("active");
-
         const member = btn.dataset.member;
         cards.forEach(card => {
             if(member === "OT8") {
@@ -175,7 +229,7 @@ memberButtons.forEach(btn => {
     });
 });
 
-// Filtro ricerca
+// Ricerca card view
 document.getElementById("search").addEventListener("input", function() {
     const query = this.value.toLowerCase();
     cards.forEach(card => {
@@ -183,6 +237,74 @@ document.getElementById("search").addEventListener("input", function() {
         card.style.display = name.includes(query) ? "block" : "none";
     });
 });
+
+// ===================== TABELLA =====================
+
+// Seleziona tbody e progress
+const tbody = document.querySelector("#photocardTable tbody");
+const progressEl = document.getElementById("progress");
+
+// Genera righe tabella
+allCards.forEach((card,index) => {
+    const tr = document.createElement("tr");
+
+    const tdCheck = document.createElement("td");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.addEventListener("change", saveState);
+    tdCheck.appendChild(checkbox);
+
+    const tdType = document.createElement("td");
+    tdType.innerText = card.type;
+
+    const tdMember = document.createElement("td");
+    tdMember.innerText = card.member;
+
+    const tdImg = document.createElement("td");
+    const img = document.createElement("img");
+    img.src = card.img;
+    img.alt = card.name;
+    tdImg.appendChild(img);
+
+    tr.appendChild(tdCheck);
+    tr.appendChild(tdType);
+    tr.appendChild(tdMember);
+    tr.appendChild(tdImg);
+
+    tbody.appendChild(tr);
+});
+
+// Salva stato checkbox
+function saveState() {
+    const states = {};
+    document.querySelectorAll("#photocardTable tbody tr").forEach((tr,index) => {
+        const checkbox = tr.querySelector("input[type=checkbox]");
+        states[index] = checkbox.checked;
+    });
+    localStorage.setItem("photocardState", JSON.stringify(states));
+    updateProgress();
+}
+
+// Carica stato checkbox
+function loadState() {
+    const states = JSON.parse(localStorage.getItem("photocardState")) || {};
+    document.querySelectorAll("#photocardTable tbody tr").forEach((tr,index) => {
+        const checkbox = tr.querySelector("input[type=checkbox]");
+        if(states[index]) checkbox.checked = true;
+    });
+    updateProgress();
+}
+
+// Aggiorna barra progresso
+function updateProgress() {
+    const checkboxes = document.querySelectorAll("#photocardTable tbody input[type=checkbox]");
+    const checked = document.querySelectorAll("#photocardTable tbody input[type=checkbox]:checked");
+    const percent = Math.round((checked.length / checkboxes.length) * 100);
+    progressEl.innerText = `Completion: ${checked.length}/${checkboxes.length} (${percent}%)`;
+}
+
+loadState();
+
 </script>
 
 </body>
