@@ -49,7 +49,7 @@ input[type="text"]::placeholder {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
     margin: 20px 0;
 }
 
@@ -68,7 +68,6 @@ input[type="text"]::placeholder {
     color: #fff;
 }
 
-/* Active/selected button */
 .member-btn.active {
     background: #ff4d4d; /* rosso quando selezionato */
     color: #fff;
@@ -113,21 +112,24 @@ input[type="text"]::placeholder {
     </div>
 </header>
 
-<div class="members">
-    <button class="member-btn" data-member="Bang Chan">Bang Chan</button>
-    <button class="member-btn" data-member="Lee Know">Lee Know</button>
-    <button class="member-btn" data-member="Changbin">Changbin</button>
-    <button class="member-btn" data-member="Hyunjin">Hyunjin</button>
-    <button class="member-btn" data-member="HAN">HAN</button>
-    <button class="member-btn" data-member="Felix">Felix</button>
-    <button class="member-btn" data-member="Seungmin">Seungmin</button>
-    <button class="member-btn" data-member="I.N.">I.N.</button>
-    <button class="member-btn" data-member="OT8">OT8</button>
-</div>
+<div class="members" id="membersContainer"></div>
 
 <div class="cards" id="cardsContainer"></div>
 
 <script>
+// Lista dei membri
+const members = ["Bang Chan","Lee Know","Changbin","Hyunjin","HAN","Felix","Seungmin","I.N.","OT8"];
+const membersContainer = document.getElementById("membersContainer");
+
+// Crea i bottoni dei membri
+members.forEach(member => {
+    const btn = document.createElement("button");
+    btn.className = "member-btn";
+    btn.innerText = member;
+    btn.setAttribute("data-member", member);
+    membersContainer.appendChild(btn);
+});
+
 // Array con tutte le photocard
 const allCards = [
     {member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/120"},
@@ -141,17 +143,17 @@ const allCards = [
     {member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/120"},
 ];
 
-// Genera le card
-const container = document.getElementById("cardsContainer");
+// Genera le card nel container
+const cardsContainer = document.getElementById("cardsContainer");
 allCards.forEach(card => {
     const div = document.createElement("div");
     div.className = "card";
     div.setAttribute("data-member", card.member);
     div.innerHTML = `<img src="${card.img}"><p>${card.name}</p>`;
-    container.appendChild(div);
+    cardsContainer.appendChild(div);
 });
 
-// Filtra per membro
+// Selezione bottoni e filtro
 const memberButtons = document.querySelectorAll(".member-btn");
 const cards = document.querySelectorAll(".card");
 
