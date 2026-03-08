@@ -39,7 +39,7 @@ border-radius:8px;
 <body>
 
 <h1>SKZ Photocard Tracker</h1>
-
+<button onclick="showAlbum('mixtape')">Mixtape</button>
 <p id="progress">Completion: 0%</p>
 
 <div class="cards">
@@ -49,7 +49,23 @@ border-radius:8px;
 <img src="https://via.placeholder.com/120">
 <p>Bang Chan PC</p>
 </div>
+<div id="mixtape" class="album">
 
+<h2>Mixtape</h2>
+
+<div class="card">
+<input type="checkbox" onclick="updateProgress()">
+<img src="https://via.placeholder.com/120">
+<p>Bang Chan Mixtape</p>
+</div>
+
+<div class="card">
+<input type="checkbox" onclick="updateProgress()">
+<img src="https://via.placeholder.com/120">
+<p>Lee Know Mixtape</p>
+</div>
+
+</div>
 <div class="card">
 <input type="checkbox" onclick="updateProgress()">
 <img src="https://via.placeholder.com/120">
