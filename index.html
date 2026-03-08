@@ -129,12 +129,12 @@ input[type="checkbox"] {
     <div class="select-search">
         <!-- Menu principale -->
         <select id="category">
-            <option value="albumCoreani">Album Coreani</option>
-            <option value="albumGiapponesi">Album Giapponesi</option>
-            <option value="pobCoreano">POB Coreano</option>
-            <option value="pobGiapponese">POB Giapponese</option>
+            <option value="albumCoreani">Album Korean</option>
+            <option value="albumGiapponesi">Album Japan</option>
+            <option value="pobCoreano">POB Korean</option>
+            <option value="pobGiapponese">POB Japan</option>
         </select>
-        <input type="text" id="search" placeholder="Cerca photocard...">
+        <input type="text" id="search" placeholder="Find Photocard...">
     </div>
 </header>
 
@@ -176,14 +176,22 @@ members.forEach(member => {
 
 // Photocard data
 const photocardData = [
-    {album: "Mixtape", type: "Album Coreano", member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/80"},
-    {album: "Mixtape", type: "Album Coreano", member: "Lee Know", name: "Lee Know PC 1", img: "https://via.placeholder.com/80"},
-    {album: "Mixtape", type: "Album Coreano", member: "Changbin", name: "Changbin PC 1", img: "https://via.placeholder.com/80"},
-    {album: "Mixtape", type: "Album Coreano", member: "Hyunjin", name: "Hyunjin PC 1", img: "https://via.placeholder.com/80"},
-    {album: "Mixtape", type: "Album Coreano", member: "HAN", name: "HAN PC 1", img: "https://via.placeholder.com/80"},
-    {album: "Mixtape", type: "Album Coreano", member: "Felix", name: "Felix PC 1", img: "https://via.placeholder.com/80"},
-    {album: "Mixtape", type: "Album Coreano", member: "Seungmin", name: "Seungmin PC 1", img: "https://via.placeholder.com/80"},
-    {album: "Mixtape", type: "Album Coreano", member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Making Vr", member: "Bang Chan", name: "Bang Chan PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Selfie Vr", member: "Bang Chan", name: "Lee Know PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Making Vr", member: "Lee Know", name: "Changbin PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Selfie Vr", member: "Lee Know", name: "Hyunjin PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Making Vr", member: "Changbin", name: "HAN PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Selfie Vr", member: "Changbin", name: "Felix PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Making Vr", member: "Hyunjin", name: "Seungmin PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Selfie Vr", member: "Hyunjin", name: "I.N. PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Making Vr", member: "HAN", name: "Seungmin PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Selfie Vr", member: "HAN", name: "I.N. PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Making Vr", member: "Felix", name: "Seungmin PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Selfie Vr", member: "Felix", name: "I.N. PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Making Vr", member: "Seungmin", name: "Seungmin PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Selfie Vr", member: "Seungmin", name: "I.N. PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Making Vr", member: "I.N.", name: "Seungmin PC 1", img: "https://via.placeholder.com/80"},
+    {album: "Mixtape", type: "Selfie Vr", member: "I.N.", name: "I.N. PC 1", img: "https://via.placeholder.com/80"},
 ];
 
 // Menu album dinamico
