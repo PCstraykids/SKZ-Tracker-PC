@@ -463,12 +463,17 @@ const q=this.value.toLowerCase();
 
 tbody.querySelectorAll("tr").forEach(tr=>{
 
-const name=tr.children[3].innerText.toLowerCase();
+const type = tr.children[1].innerText.toLowerCase();
+const member = tr.children[2].innerText.toLowerCase();
 
-tr.style.display=name.includes(q)?"table-row":"none";
+if(type.includes(q) || member.includes(q)){   
+    tr.style.display = "table-row";
+}else{
+    tr.style.display = "none";
+}
 
 });
-
+    
 });
 
 </script>
