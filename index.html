@@ -457,21 +457,28 @@ tr.style.display=(member==="OT8"||tr.children[2].innerText.includes(member))?"ta
 
 populateAlbumMenu(document.getElementById("category").value);
 
-document.getElementById("search").addEventListener("input",function(){
+document.getElementById("search").addEventListener("input", function () {
+    const q = this.value.toLowerCase();
+    tbody.innerHTML = "";
 
-const q = this.value.toLowerCase();
+    photocardData.forEach(c => {
+        const text = (c.album + ' ' + c.member + ' ' + c.type).toLowerCase();
+        if (text.includes(q)) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td><input type="checkbox"></td>
+                <td>${c.type}</td>
+                <td>${c.member}</td>
+                <td><img src="${c.img}" alt="Photocard"></td>
+            `;
+            tr.querySelector("input").addEventListener("change", saveState);
+            tbody.appendChild(tr);
+        }
+    });
 
-tbody.querySelectorAll("tr").forEach(tr => {
-    const member = tr.children[2].innerText.toLowerCase();
-    const type = tr.children[1].innerText.toLowerCase();
-    const album = tr.children[0].innerText,toLowerCase(); 
-    // Mostra se il testo di ricerca è contenuto in member, type, album
-     tr.style.display = 
-         member.includes(q) || type.includes(q) || album.includes8(q)? "table-row" : "none";   
-  });
-    
+    photocardTable.style.display = tbody.children.length > 0 ? "table" : "none";
+    updateProgress();
 });
-
 </script>
 
 </body>
