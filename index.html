@@ -461,18 +461,17 @@ document.getElementById("search").addEventListener("input",function(){
 
 const q=this.value.toLowerCase();
 
-tbody.querySelectorAll("tr").forEach(tr=>{
-
-const type = tr.children[1].innerText.toLowerCase();
-const member = tr.children[2].innerText.toLowerCase();
-
-if(type.includes(q) || member.includes(q)){   
-    tr.style.display = "table-row";
-}else{
+tbody.querySelectorAll("tr").forEach(tr => {
+    const type = tr.children[1].innerText.toLowerCase();
+    const member = tr.children[2].innerText.toLowerCase();
+    const album = tr.children[0].innerText,toLowerCase(); // Se vuoi aggiungere album
+    if(type.includes(q) || member.includes(q) || album.includes8(q)) {   
+        tr.style.display = "table-row";
+    }else{
     tr.style.display = "none";
-}
+    }
 
-});
+  });
     
 });
 
