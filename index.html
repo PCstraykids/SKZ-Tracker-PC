@@ -159,7 +159,7 @@ const photocardData = [
 {category:"albumCoreani",album:"I Am NOT",type:"Unit Vr",member:"Changbin-Felix-Seungmin",img:"https://i.postimg.cc/76z6KwsL/2dd68b8b9132ec9e7c79ea74ec061bd4.jpg"},
 {category:"albumCoreani",album:"I Am NOT",type:"Unit Vr",member:"Changbin-Hyunjin-Seungmin",img:"https://i.postimg.cc/t4rNjNXm/4ebcdaee595583dae0e578dc2be2cb54.jpg"},
 {category:"albumCoreani",album:"I Am NOT",type:"Unit Vr",member:"Hyunjin-Seungmin-I.N.",img:"https://i.postimg.cc/YqCxyP7k/42d965b31b53343c89ee255e2ab86f85.jpg"},
-{category:"albumCoreani",album:"I Am NOT",type:"Unit Vr",member:"Felix-Seungmin-I.N.",img:https://i.postimg.cc/8CkDFWrd/04c8e4f531e6b67a190b1639f9bb3711.jpg"},
+{category:"albumCoreani",album:"I Am NOT",type:"Unit Vr",member:"Felix-Seungmin-I.N.",img:"https://i.postimg.cc/8CkDFWrd/04c8e4f531e6b67a190b1639f9bb3711.jpg"},
     
 {category:"pobCoreano",album:"Mixtape",type:"Postcard POB",member:"Bang Chan",img:"https://i.postimg.cc/FR8v9GXR/9d547e1f3060fdbedf1cd51cc55ee206.jpg"},
 {category:"pobCoreano",album:"Mixtape",type:"Postcard POB",member:"Lee Know",img:"https://i.postimg.cc/qM8rT8bT/afd0b6896cbdf805919028c884ec33b3.jpg"},
@@ -303,7 +303,7 @@ const member=btn.dataset.member;
 
 tbody.querySelectorAll("tr").forEach(tr=>{
 
-tr.style.display=(member==="OT8"||tr.children[2].innerText===member)?"table-row":"none";
+tr.style.display=(member==="OT8"||tr.children[2].innerText.includes(member))?"table-row":"none";
 
 });
 
