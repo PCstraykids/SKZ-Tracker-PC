@@ -58,6 +58,40 @@ th { background: #3a3f51; }
 td img { width: 60px; border-radius: 6px; }
 input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
 #progress { width: 90%; margin: 20px auto; text-align: right; font-weight: bold; color: #ffcc00; }
+    
+.pc-card{
+width:60px;
+height:85px;
+perspective:1000px;
+margin:auto;
+}
+
+.pc-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform 0.6s;
+transform-style:preserve-3d;
+}
+
+.pc-card:hover .pc-inner{
+transform:rotateY(180deg);
+}
+
+.pc-front,
+.pc-back{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:6px;
+backface-visibility:hidden;
+}
+
+.pc-back{
+transform:rotateY(180deg);
+}
+    
 </style>
 </head>
 <body>
@@ -450,7 +484,7 @@ const photocardData = [
 
 {category:"albumCoreani",album:"Go Live",type:"Concept A",member:"Bang Chan",img:"https://i.postimg.cc/85wPB5xG/9f2f3d8e10473da4549a009f347792fc.jpg"},
 {category:"albumCoreani",album:"Go Live",type:"Concept B",member:"Bang Chan",img:"https://i.postimg.cc/JzJrYKSj/2be501fce6d1b194104b631bed5c0c76.jpg"},
-{category:"albumCoreani",album:"Go Live",type:"Double Sided A",member:"Bang Chan",img:"https://i.postimg.cc/wvx9vz3z/7d4c72f63faea160339f2380149c469f.jpg https://i.postimg.cc/NFStpr4z/2a8fcb0e6de231897cbfb18458f4dc22.jpg"},
+{category:"albumCoreani",album:"Go Live",type:"Double Sided A",member:"Bang Chan",imgFront:"https://i.postimg.cc/wvx9vz3z/7d4c72f63faea160339f2380149c469f.jpg",imgBack:"https://i.postimg.cc/NFStpr4z/2a8fcb0e6de231897cbfb18458f4dc22.jpg"},
 {category:"albumCoreani",album:"Go Live",type:"Double Sided B",member:"Bang Chan",img:"https://i.postimg.cc/brRbnds1/b2bc6c43858074d354db182f3c443c41.jpg"},
 {category:"albumCoreani",album:"Go Live",type:"Uniform",member:"Bang Chan",img:"https://i.postimg.cc/cLCYKxZf/1af121a408581d8204b1eca7dbdf10e7.jpg"},
 {category:"albumCoreani",album:"Go Live",type:"Limited",member:"Bang Chan",img:"https://i.postimg.cc/mkVzDq5Q/d59b41cd398896cb5106c7785dfb51b0.jpg"},
@@ -736,21 +770,36 @@ document.getElementById("search").addEventListener("input", function () {
     const q = this.value.toLowerCase();
     tbody.innerHTML = "";
 
-    photocardData.forEach(c => {
-        const text = (c.album + ' ' + c.member + ' ' + c.type).toLowerCase();
-        if (text.includes(q)) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td><input type="checkbox"></td>
-                <td>${c.type}</td>
-                <td>${c.member}</td>
-                <td><img src="${c.img}" alt="Photocard"></td>
-            `;
-            tr.querySelector("input").addEventListener("change", saveState);
-            tbody.appendChild(tr);
-        }
-    });
+   photocardData.forEach(c => {
+    const text = (c.album + ' ' + c.member + ' ' + c.type).toLowerCase();
+    if (text.includes(q)) {
+        const tr = document.createElement("tr");
 
+        // Genera l'HTML della photocard
+        let imgHtml = '';
+        if (c.img && c.img2) { // Se ci sono fronte e retro
+            imgHtml = `
+            <div class="pc-card">
+                <div class="pc-inner">
+                    <img src="${c.img}" class="pc-front" alt="Front">
+                    <img src="${c.img2}" class="pc-back" alt="Back">
+                </div>
+            </div>`;
+        } else if (c.img) { // Solo fronte
+            imgHtml = `<img src="${c.img}" alt="Photocard" style="width:60px; border-radius:6px;">`;
+        }
+
+        tr.innerHTML = `
+            <td><input type="checkbox"></td>
+            <td>${c.type}</td>
+            <td>${c.member}</td>
+            <td>${imgHtml}</td>
+        `;
+
+        tr.querySelector("input").addEventListener("change", saveState);
+        tbody.appendChild(tr);
+    }
+});
     photocardTable.style.display = tbody.children.length > 0 ? "table" : "none";
     updateProgress();
 });
