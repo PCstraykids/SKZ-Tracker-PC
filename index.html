@@ -683,13 +683,30 @@ const filtered = photocardData.filter(c => c.album === album && c.category === c
 
 filtered.forEach(c => {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td><input type="checkbox"></td><td>${c.type}</td><td>${c.member}</td><td><img src="${c.img}" alt="Photocard"></td>`;
+    
+    let imgHtml = '';
+    if (c.imgFront && c.imgBack) {
+        imgHtml = `
+        <div class="pc-card">
+            <div class="pc-inner">
+                <img src="${c.imgFront}" class="pc-front" alt="Front">
+                <img src="${c.imgBack}" class="pc-back" alt="Back">
+            </div>
+        </div>`;
+    } else if (c.img) {
+        imgHtml = `<img src="${c.img}" style="width:60px; border-radius:6px;" alt="Photocard">`;
+    } else {
+        imgHtml = `No image`;
+    }
+
+    tr.innerHTML = `
+        <td><input type="checkbox"></td>
+        <td>${c.type}</td>
+        <td>${c.member}</td>
+        <td>${imgHtml}</td>
+    `;
     tr.querySelector("input").addEventListener("change", saveState);
     tbody.appendChild(tr);
-});
-photocardTable.style.display = "table";
-loadState();
-
 });
 
 function saveState(){
