@@ -484,7 +484,7 @@ const photocardData = [
 
 {category:"albumCoreani",album:"Go Live",type:"Concept A",member:"Bang Chan",img:"https://i.postimg.cc/85wPB5xG/9f2f3d8e10473da4549a009f347792fc.jpg"},
 {category:"albumCoreani",album:"Go Live",type:"Concept B",member:"Bang Chan",img:"https://i.postimg.cc/JzJrYKSj/2be501fce6d1b194104b631bed5c0c76.jpg"},
-{category:"albumCoreani",album:"Go Live",type:"Double Sided A",member:"Bang Chan",imgFront:"https://i.postimg.cc/wvx9vz3z/7d4c72f63faea160339f2380149c469f.jpg", imgBack:"https://i.postimg.cc/NFStpr4z/2a8fcb0e6de231897cbfb18458f4dc22.jpg"},
+{category:"albumCoreani",album:"Go Live",type:"Double Sided A",member:"Bang Chan",imgFront:"https://i.postimg.cc/wvx9vz3z/7d4c72f63faea160339f2380149c469f.jpg",imgBack:"https://i.postimg.cc/NFStpr4z/2a8fcb0e6de231897cbfb18458f4dc22.jpg"},
 {category:"albumCoreani",album:"Go Live",type:"Double Sided B",member:"Bang Chan",img:"https://i.postimg.cc/brRbnds1/b2bc6c43858074d354db182f3c443c41.jpg"},
 {category:"albumCoreani",album:"Go Live",type:"Uniform",member:"Bang Chan",img:"https://i.postimg.cc/cLCYKxZf/1af121a408581d8204b1eca7dbdf10e7.jpg"},
 {category:"albumCoreani",album:"Go Live",type:"Limited",member:"Bang Chan",img:"https://i.postimg.cc/mkVzDq5Q/d59b41cd398896cb5106c7785dfb51b0.jpg"},
@@ -773,11 +773,10 @@ photocardData.forEach(c => {
     const text = (c.album + ' ' + c.member + ' ' + c.type).toLowerCase();
     if (text.includes(q)) {
         const tr = document.createElement("tr");
-
-        // Costruisco l'HTML della photocard
+        
         let imgHtml = '';
         if (c.imgFront && c.imgBack) {
-            // Doppio lato
+            // doppio lato
             imgHtml = `
             <div class="pc-card">
                 <div class="pc-inner">
@@ -786,9 +785,12 @@ photocardData.forEach(c => {
                 </div>
             </div>`;
         } else if (c.img) {
-            // Singolo lato
-            imgHtml = `<img src="${c.img}" alt="Photocard" style="width:60px; border-radius:6px;">`;
-        }
+            // singolo lato
+            imgHtml = `<img src="${c.img}" style="width:60px; border-radius:6px; alt="Photocard">`;
+        } else  {
+            // nessuna immagine
+            imgHtml =  `No image`;
+        } 
 
         tr.innerHTML = `
             <td><input type="checkbox"></td>
