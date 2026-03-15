@@ -59,6 +59,7 @@ td img { width: 60px; border-radius: 6px; }
 input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
 #progress { width: 90%; margin: 20px auto; text-align: right; font-weight: bold; color: #ffcc00; }
     
+/* Flip card CSS*/   
 .pc-card{
 width:60px;
 height:85px;
@@ -78,20 +79,17 @@ transform-style:preserve-3d;
 transform:rotateY(180deg);
 }
 
-.pc-front,
-.pc-back{
-position:absolute;
-width:100%;
-height:100%;
-object-fit:cover;
-border-radius:6px;
-backface-visibility:hidden;
+.pc-front, .pc-back{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:6px;
+    backface-visibility:hidden;
 }
-
 .pc-back{
-transform:rotateY(180deg);
-}
-    
+    transform:rotateY(180deg);
+}    
 </style>
 </head>
 <body>
@@ -132,17 +130,16 @@ transform:rotateY(180deg);
 <p id="progress">Completion: 0%</p>
 
 <script>
-
 // Membri
 const members = ["Bang Chan","Woojin","Lee Know","Changbin","Hyunjin","HAN","Felix","Seungmin","I.N.","OT8"];
 const membersContainer = document.getElementById("membersContainer");
 
 members.forEach(m => {
-const btn = document.createElement("button");
-btn.className = "member-btn";
-btn.innerText = m;
-btn.dataset.member = m;
-membersContainer.appendChild(btn);
+    const btn = document.createElement("button");
+    btn.className = "member-btn";
+    btn.innerText = m;
+    btn.dataset.member = m;
+    membersContainer.appendChild(btn);
 });
 
 // Photocard data
@@ -619,71 +616,55 @@ const photocardData = [
 {category:"pobCoreano",album:"Clé 3: Levanter",type:"Unite Broadcast Double Knot",member:"Changbin-Seungmin",img:"https://i.postimg.cc/fbjdgJ51/2e1b4247149b8be46900529baf4d317d.jpg"},
 {category:"pobCoreano",album:"Clé 3: Levanter",type:"Unite Broadcast Double Knot",member:"Felix-I.N.",img:"https://i.postimg.cc/tCKVqhMv/f7efd7a89d10eca86533fe114dfd787a.jpg"},
 {category:"pobCoreano",album:"Clé 3: Levanter",type:"Unite Broadcast Double Knot",member:"Seungmin-I.N.",img:"https://i.postimg.cc/28ZVK1Sb/ab63df43baf34e542d292a9f8df98d6a.jpg"},
-    
-    
-
 
 ];
 
 // Elementi
-const albumSelect=document.getElementById("albumSelect");
-const photocardTable=document.getElementById("photocardTable");
-const tbody=photocardTable.querySelector("tbody");
-const progressEl=document.getElementById("progress");
+const albumSelect = document.getElementById("albumSelect");
+const photocardTable = document.getElementById("photocardTable");
+const tbody = photocardTable.querySelector("tbody");
+const progressEl = document.getElementById("progress");
 
+//Popola menu album
 function populateAlbumMenu(category){
-
-albumSelect.innerHTML='<option value="">Select album</option>';
-
-let filtered=photocardData.filter(c=>c.category===category);
-
-const albums=[...new Set(filtered.map(c=>c.album))];
-
-albums.forEach(album=>{
-
-const total=filtered.filter(c=>c.album===album).length;
-
-const option=document.createElement("option");
-option.value=album;
-option.dataset.total=total;
-option.innerText=`${album} - 0/${total} (0%)`;
-
-albumSelect.appendChild(option);
-
-});
-
+    albumSelect.innerHTML='<option value="">Select album</option>';
+    let filtered = photocardData.filter(c => c.category === category);
+    const albums = [...new Set(filtered.map(c => c.album))];
+    albums.forEach(album => {
+        const total = filtered.filter(c => c.album === album).length;
+        const option = document.createElement("option");
+        option.value = album;
+        option.dataset.total = total;
+        option.innerText = `${album} - 0/${total} (0%)`;
+        albumSelect.appendChild(option);
+    });
 }
 
+// Cambio categoria
 document.getElementById("category").addEventListener("change",()=>{
-
-const category=document.getElementById("category").value;
-
-populateAlbumMenu(category);
-
-photocardTable.style.display="none";
-
-progressEl.innerText="Completion: 0%";
-
-});
-
-albumSelect.addEventListener("change",()=>{
-
-const album = albumSelect.value;
-const category = document.getElementById("category").value;
-
-tbody.innerHTML="";
-
-if(!album){
+    populateAlbumMenu(document.getElementById("category").value);
     photocardTable.style.display = "none";
     progressEl.innerText = "Completion: 0%";
-    return;
+});
 
-}
-const filtered = photocardData.filter(c => c.album === album && c.category === category);
-
-filtered.forEach(c => {
+//Mostra photocard per album
+albumSelect.addEventListener("change",() => {
+    const album = albumSelect.value;
+    const category = document.getElementById("category").value;
+    tbody.innerHTML="";
+    if(!album){
+        photocardTable.style.display = "none";
+        progressEl.innerText = "Completion: 0%";
+        return;
+    }
+    const filtered = photocardData.filter(c => c.album === album && c.category === category);
+    filtered.forEach(c => appendPhotocardRow(c));
+    photocardTable.style.display = "table";
+    loadState();
+});
+//Funzioni helper
+function appendPhotocardRow(c) {    
     const tr = document.createElement("tr");
-    
     let imgHtml = '';
     if (c.imgFront && c.imgBack) {
         imgHtml = `
@@ -698,7 +679,6 @@ filtered.forEach(c => {
     } else {
         imgHtml = `No image`;
     }
-
     tr.innerHTML = `
         <td><input type="checkbox"></td>
         <td>${c.type}</td>
@@ -708,122 +688,64 @@ filtered.forEach(c => {
     tr.querySelector("input").addEventListener("change", saveState);
     tbody.appendChild(tr);
 });
-
+// Salvataggio stato
 function saveState(){
-
-const rows=tbody.querySelectorAll("tr");
-
-const album=albumSelect.value;
-
-const option=Array.from(albumSelect.options).find(o=>o.value===album);
-
-const total=parseInt(option.dataset.total);
-
-const checked=Array.from(rows).filter(r=>r.querySelector("input").checked).length;
-
-option.innerText=`${album} - ${checked}/${total} (${Math.round(checked/total*100)}%)`;
-
-const states={};
-
-rows.forEach((tr,i)=>states[i]=tr.querySelector("input").checked);
-
-localStorage.setItem(`photocardState-${album}`,JSON.stringify(states));
-
-updateProgress();
-
+    const rows = tbody.querySelectorAll("tr");
+    const album = albumSelect.value;
+    const option = Array.from(albumSelect.options).find(o => o.value === album);
+    const total = parseInt(option.dataset.total);
+    const checked = Array.from(rows).filter(r => r.querySelector("input").checked).length;
+    option.innerText=`${album} - ${checked}/${total} (${Math.round(checked/total*100)}%)`;
+    const states={};
+    rows.forEach((tr,i)=>states[i]=tr.querySelector("input").checked);
+    localStorage.setItem(`photocardState-${album}`,JSON.stringify(states));
+    updateProgress();
 }
 
+// Caricamento stato
 function loadState(){
-
-const album=albumSelect.value;
-
-if(!album)return;
-
-const rows=tbody.querySelectorAll("tr");
-
-const states=JSON.parse(localStorage.getItem(`photocardState-${album}`))||{};
-
-rows.forEach((tr,i)=>tr.querySelector("input").checked=!!states[i]);
-
-saveState();
-
+    const album = albumSelect.value;
+    if(!album)return;
+    const rows=tbody.querySelectorAll("tr");
+    const states=JSON.parse(localStorage.getItem(`photocardState-${album}`)) || {};
+    rows.forEach((tr,i)=>tr.querySelector("input").checked = !!states[i]);
+    saveState();
 }
 
+// Aggiornamento progress 
 function updateProgress(){
-
-const rows=tbody.querySelectorAll("tr");
-
-const checked=Array.from(rows).filter(r=>r.querySelector("input").checked).length;
-
-const total=rows.length;
-
-progressEl.innerText=`Completion: ${checked}/${total} (${total?Math.round(checked/total*100):0}%)`;
-
+    const rows = tbody.querySelectorAll("tr");
+    const checked = Array.from(rows).filter(r=>r.querySelector("input").checked).length;
+    const total=rows.length;
+        progressEl.innerText=`Completion: ${checked}/${total} (${total?Math.round(checked/total*100):0}%)`;
 }
 
-document.querySelectorAll(".member-btn").forEach(btn=>{
-
-btn.addEventListener("click",()=>{
-
-document.querySelectorAll(".member-btn").forEach(b=>b.classList.remove("active"));
-
-btn.classList.add("active");
-
-const member=btn.dataset.member;
-
-tbody.querySelectorAll("tr").forEach(tr=>{
-
-tr.style.display=(member==="OT8"||tr.children[2].innerText.includes(member))?"table-row":"none";
-
+// Filtra per membro
+document.querySelectorAll(".member-btn").forEach(btn => {
+    btn.addEventListener("click",() => {
+        document.querySelectorAll(".member-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const member = btn.dataset.member;
+        tbody.querySelectorAll("tr").forEach(tr => {
+            tr.style.display = (member === "OT8" || tr.children[2].innerText.includes(member)) ? "table-row" : "none";
+        });
+    });
 });
 
-});
-
-});
-
-populateAlbumMenu(document.getElementById("category").value);
-
+// Ricerca
 document.getElementById("search").addEventListener("input", function () {
     const q = this.value.toLowerCase();
     tbody.innerHTML = "";
-photocardData.forEach(c => {
+    photocardData.forEach(c => {
     const text = (c.album + ' ' + c.member + ' ' + c.type).toLowerCase();
-    if (text.includes(q)) {
-        const tr = document.createElement("tr");
-        
-        let imgHtml = '';
-        if (c.imgFront && c.imgBack) {
-            // doppio lato
-            imgHtml = `
-            <div class="pc-card">
-                <div class="pc-inner">
-                    <img src="${c.imgFront}" class="pc-front" alt="Front">
-                    <img src="${c.imgBack}" class="pc-back" alt="Back">
-                </div>
-            </div>`;
-        } else if (c.img) {
-            // singolo lato
-            imgHtml = `<img src="${c.img}" style="width:60px; border-radius:6px; alt="Photocard">`;
-        } else  {
-            // nessuna immagine
-            imgHtml =  `No image`;
-        } 
-
-        tr.innerHTML = `
-            <td><input type="checkbox"></td>
-            <td>${c.type}</td>
-            <td>${c.member}</td>
-            <td>${imgHtml}</td>
-        `;
-
-        tr.querySelector("input").addEventListener("change", saveState);
-        tbody.appendChild(tr);
-    }
-});
+    if (text.includes(q)) appendPhotocardRow(c);
+    });
     photocardTable.style.display = tbody.children.length > 0 ? "table" : "none";
     updateProgress();
 });
-</script>
 
+// Inizializza
+populateAlbumMenu(document.getElementById("category").value);
+</script>
 </body>
 </html>
