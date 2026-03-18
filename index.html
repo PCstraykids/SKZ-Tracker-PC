@@ -1354,21 +1354,31 @@ const progressEl=document.getElementById("progress");
 
 // Funzioni principali
 function populateAlbumMenu(category){
+
     albumSelect.innerHTML='<option value="">Select album</option>';
+
     let filtered=photocardData.filter(c=>c.category===category);
+
     const albums=[...new Set(filtered.map(c=>c.album))];
+
     albums.forEach(album=>{
+
         const total=filtered.filter(c=>c.album===album).length;
-        // Leggiamo i dati salvati
+
+        // 👉 LEGGIAMO I DATI SALVATI
         const savedStates = JSON.parse(localStorage.getItem(`photocardState-${album}`)) || {};
         const checked = Object.values(savedStates).filter(v => v).length;
+
         const option=document.createElement("option");
         option.value=album;
         option.dataset.total=total;
-        
-        option.innerText=`${album} -${checked}/${total} (${total ? Math.round(checked/total*100) : 0}%)`;
+
+        option.innerText=`${album} - ${checked}/${total} (${total ? Math.round(checked/total*100) : 0}%)`;
+
         albumSelect.appendChild(option);
+
     });
+
 }
 
 function saveState(){
