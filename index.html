@@ -1393,12 +1393,12 @@ function saveState(){
     const checked=Array.from(rows).filter(r=>r.querySelector("input").checked).length;
     
     option.innerText=`${album} - ${checked}/${total} (${Math.round(checked/total*100)}%)`;
+
     const states={};
     rows.forEach((tr,i) => {
-        states[i] = tr.querySelector("input").checked);
+        states[i] = tr.querySelector("input").checked;
     });
 
-    //Salviamo usando il nome dell'album come chiave 
     localStorage.setItem(`photocardState-${album}`,JSON.stringify(states));
     updateProgress();
 }
@@ -1408,15 +1408,14 @@ function loadState(){
     if(!album) return;
     
     const rows=tbody.querySelectorAll("tr");
-    //Recuperiamo lo stato usando l'album
-    const states=JSON.parse(localStorage.getItem(`photocardState-${album}`))||{}
+    const states = JSON.parse(localStorage.getItem(`photocardState-${album}`)) || {};
     
     rows.forEach((tr,i)=> {
-        tr.querySelector("input").checked=!!states[i]);
+        tr.querySelector("input").checked = !!states[i];
     });
-    saveState(); //Aggiorniamo la progressione
-}
 
+    saveState();
+}
 function updateProgress(){
     const rows=tbody.querySelectorAll("tr");
     const checked=Array.from(rows).filter(r=>r.querySelector("input").checked).length;
