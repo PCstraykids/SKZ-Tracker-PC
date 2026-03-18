@@ -1367,8 +1367,7 @@ function populateAlbumMenu(category){
         let checked = 0;
 
         // 👉 controlliamo se esiste qualcosa salvato
-        const saved = localStorage.getItem(`photocardState-${album}`);
-
+       const saved = localStorage.getItem(`photocardState-${category}-${album}`);
         if(saved){
             const states = JSON.parse(saved);
             checked = Object.values(states).filter(v => v === true).length;
@@ -1388,6 +1387,7 @@ function populateAlbumMenu(category){
 function saveState(){
     const rows=tbody.querySelectorAll("tr");
     const album=albumSelect.value;
+    const saved = localStorage.getItem(`photocardState-${category}-${album}`);
     const option=Array.from(albumSelect.options).find(o=>o.value===album);
     const total=parseInt(option.dataset.total);
     const checked=Array.from(rows).filter(r=>r.querySelector("input").checked).length;
@@ -1399,16 +1399,18 @@ function saveState(){
         states[i] = tr.querySelector("input").checked;
     });
 
-    localStorage.setItem(`photocardState-${album}`,JSON.stringify(states));
+    localStorage.setItem(`photocardState-${category}-${album}`,JSON.stringify(states));
     updateProgress();
 }
 
 function loadState(){
     const album=albumSelect.value;
+    const category=document.getElementById("category").value;
+
     if(!album) return;
     
     const rows=tbody.querySelectorAll("tr");
-    const states = JSON.parse(localStorage.getItem(`photocardState-${album}`)) || {};
+    const states = JSON.parse(localStorage.getItem(`photocardState-${category}-${album}`)) || {};
     
     rows.forEach((tr,i)=> {
         tr.querySelector("input").checked = !!states[i];
