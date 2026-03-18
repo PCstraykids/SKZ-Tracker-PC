@@ -1357,30 +1357,34 @@ function populateAlbumMenu(category){
 
     albumSelect.innerHTML='<option value="">Select album</option>';
 
-    let filtered=photocardData.filter(c=>c.category===category);
-
-    const albums=[...new Set(filtered.map(c=>c.album))];
+    let filtered = photocardData.filter(c=>c.category===category);
+    const albums = [...new Set(filtered.map(c=>c.album))];
 
     albums.forEach(album=>{
 
-        const total=filtered.filter(c=>c.album===album).length;
+        const total = filtered.filter(c=>c.album===album).length;
 
-        // 👉 LEGGIAMO I DATI SALVATI
-        const savedStates = JSON.parse(localStorage.getItem(`photocardState-${album}`)) || {};
-        const checked = Object.values(savedStates).filter(v => v).length;
+        let checked = 0;
 
-        const option=document.createElement("option");
-        option.value=album;
-        option.dataset.total=total;
+        // 👉 controlliamo se esiste qualcosa salvato
+        const saved = localStorage.getItem(`photocardState-${album}`);
 
-        option.innerText=`${album} - ${checked}/${total} (${total ? Math.round(checked/total*100) : 0}%)`;
+        if(saved){
+            const states = JSON.parse(saved);
+            checked = Object.values(states).filter(v => v === true).length;
+        }
+
+        const option = document.createElement("option");
+        option.value = album;
+        option.dataset.total = total;
+
+        option.innerText = `${album} - ${checked}/${total} (${total ? Math.round(checked/total*100) : 0}%)`;
 
         albumSelect.appendChild(option);
 
     });
 
 }
-
 function saveState(){
     const rows=tbody.querySelectorAll("tr");
     const album=albumSelect.value;
