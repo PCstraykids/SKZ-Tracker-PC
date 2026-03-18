@@ -1359,10 +1359,14 @@ function populateAlbumMenu(category){
     const albums=[...new Set(filtered.map(c=>c.album))];
     albums.forEach(album=>{
         const total=filtered.filter(c=>c.album===album).length;
+        // Leggiamo i dati salvati
+        const savedStates = JSON.parse(localStorage.getItem(`photocardState-${album}`)) || {};
+        const checked = Object.values(savedStates).filter(v => v).length;
         const option=document.createElement("option");
         option.value=album;
         option.dataset.total=total;
-        option.innerText=`${album} - 0/${total} (0%)`;
+        
+        option.innerText=`${album} -${checked}/${total} (${total ? Math.round(checked/total*100) : 0}%)`;
         albumSelect.appendChild(option);
     });
 }
