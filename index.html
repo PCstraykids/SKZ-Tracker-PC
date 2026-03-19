@@ -1425,6 +1425,26 @@ function updateProgress(){
     const total=rows.length;
     progressEl.innerText=`Completion: ${checked}/${total} (${total?Math.round(checked/total*100):0}%)`;
 }
+function updateCategoryCompletion(){
+    const category = document.getElementById("category").value;
+
+    let totalChecked = 0;
+    let totalCards = 0;
+
+    const filtered = photocardData.filter(c => c.category === category);
+    const albums = [...new Set(filtered.map(c => c.album))];
+
+    albums.forEach(album => {
+        const saved = JSON.parse(localStorage.getItem(`photocardState-${category}-${album}`)) || {};
+        
+        const albumCards = filtered.filter(c => c.album === album).length;
+
+        totalCards += albumCards;
+        totalChecked += Object.values(saved).filter(v => v === true).length;
+    });
+
+    progressEl.innerText = `Completion: ${totalChecked}/${totalCards} (${totalCards ? Math.round(totalChecked/totalCards*100) : 0}%)`;
+}
 
 // Funzione per creare riga photocard
 function appendPhotocardRow(c){
@@ -1447,7 +1467,8 @@ document.getElementById("category").addEventListener("change",()=>{
     const category=document.getElementById("category").value;
     populateAlbumMenu(category);
     photocardTable.style.display="none";
-    progressEl.innerText="Completion: 0%";
+
+    updateCategoryCompletion(); // 👈 AGGIUNTO
 });
 
 albumSelect.addEventListener("change",()=>{
@@ -1467,6 +1488,7 @@ albumSelect.addEventListener("change",()=>{
 
     //Carichiamo lo stato subito
     loadState();
+    updateCategoryCompletion(); // 👈 AGGIUNTO
 });
 
 document.querySelectorAll(".member-btn").forEach(btn=>{
@@ -1481,6 +1503,7 @@ document.querySelectorAll(".member-btn").forEach(btn=>{
 });
 
 populateAlbumMenu(document.getElementById("category").value);
+updateCategoryCompletion(); // 👈 IMPORTANTISSIMO
 
 document.getElementById("search").addEventListener("input", function(){
     const q=this.value.toLowerCase();
@@ -1491,6 +1514,7 @@ document.getElementById("search").addEventListener("input", function(){
     });
     photocardTable.style.display = tbody.children.length>0?"table":"none";
     updateProgress();
+    updateCategoryCompletion(); // 👈 AGGIUNGI QUI
 });
 </script>
 </body>
