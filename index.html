@@ -1387,7 +1387,8 @@ function populateAlbumMenu(category){
 function saveState(){
     const rows=tbody.querySelectorAll("tr");
     const album=albumSelect.value;
-    const saved = localStorage.getItem(`photocardState-${category}-${album}`);
+    const category=document.getElementById("category").value;
+
     const option=Array.from(albumSelect.options).find(o=>o.value===album);
     const total=parseInt(option.dataset.total);
     const checked=Array.from(rows).filter(r=>r.querySelector("input").checked).length;
